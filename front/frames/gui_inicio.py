@@ -1,20 +1,21 @@
 
 from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+from PIL import Image, ImageTk
 
-def inicio():
+def inicio(window):
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / Path(r"assets/frame0")
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
 
 
-    window = Tk()
+    #window = Tk()
 
-    window.geometry("1440x1024")
-    window.configure(bg = "#153573")
+    #window.geometry("1440x1024")
+    #window.configure(bg = "#153573")
 
-
+    
     canvas = Canvas(
        window,
         bg = "#153573",
@@ -29,8 +30,8 @@ def inicio():
     image_image_1 = PhotoImage(
         file=relative_to_assets("image_1.png"))
     image_1 = canvas.create_image(
-        807.0,
-        585.0,
+        720.0,
+        512.0,
         image=image_image_1
     )
 
@@ -40,7 +41,7 @@ def inicio():
         image=button_image_1,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_1 clicked"),
+        command=lambda: print("aaa"),
        relief="flat"
     )
     button_1.place(
@@ -83,5 +84,5 @@ def inicio():
         fill="#FFFFFF",
         font=("ArialMT", 32 * -1)
     )
-    window.resizable(False, False)
-    window.mainloop()
+    return window
+
