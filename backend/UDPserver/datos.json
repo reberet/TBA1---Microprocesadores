@@ -6,5 +6,77 @@
     {
         "ID": 2,
         "temp": 50
+    },
+    {
+        "disco": 85,
+        "ilum": 14,
+        "puerta": 0,
+        "ruido": 72,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 14,
+        "puerta": 0,
+        "ruido": 57,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 14,
+        "puerta": 0,
+        "ruido": 57,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 14,
+        "puerta": 0,
+        "ruido": 69,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 14,
+        "puerta": 0,
+        "ruido": 56,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 49,
+        "puerta": 0,
+        "ruido": 83,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 48,
+        "puerta": 0,
+        "ruido": 82,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 50,
+        "puerta": 0,
+        "ruido": 66,
+        "temp": 48,
+        "fuego": 0
+    },
+    {
+        "disco": 85,
+        "ilum": 49,
+        "puerta": 0,
+        "ruido": 59,
+        "temp": 48,
+        "fuego": 0
     }
 ]

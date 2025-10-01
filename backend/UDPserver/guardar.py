@@ -3,21 +3,44 @@ import os
 
 ARCHIVO = "datos.json"
 
-def guardar_datos(dato):
-    try:
-        # Validar que sea JSON serializable
-        json_str = json.dumps(dato)  
-        obj = json.loads(json_str)   # vuelve a cargarlo para asegurar
-    except (TypeError, json.JSONDecodeError):
-        print("❌ El dato recibido NO es un JSON válido. Se descarta.")
-        return  # no se guarda nada
+def validar_dato(dato):
+    reglas = {
+        "disco": (0, 100),
+        "ilum": (0, 100),
+        "puerta": (0, 1),
+        "ruido": (0, 140),
+        "temp": (0, 100),
+        "fuego": (0, 1)
+    }
 
-    # Si no existe el archivo, lo creamos con una lista vacía
+    for clave in reglas.keys():
+        if clave not in dato:
+            return False, f"Falta la clave obligatoria: {clave}"
+
+    for clave in dato.keys():
+        if clave not in reglas:
+            return False, f"Clave desconocida en JSON: {clave}"
+
+    for clave, (min_val, max_val) in reglas.items():
+        valor = dato[clave]
+        if not isinstance(valor, (int, float)):
+            return False, f"Valor inválido en {clave}: debe ser numérico"
+        if not (min_val <= valor <= max_val):
+            return False, f"{clave} fuera de rango ({valor}), esperado {min_val}-{max_val}"
+
+    return True, "OK"
+
+
+def guardar_datos(dato):
+    valido, msg = validar_dato(dato)
+    if not valido:
+        print(f"❌ JSON rechazado: {msg}")
+        return False, msg  # devolvemos False para que el server mande ERR
+
     if not os.path.exists(ARCHIVO):
         with open(ARCHIVO, "w", encoding="utf-8") as f:
             json.dump([], f, indent=4, ensure_ascii=False)
 
-    # Leemos el contenido actual
     with open(ARCHIVO, "r", encoding="utf-8") as f:
         try:
             datos = json.load(f)
@@ -26,12 +49,10 @@ def guardar_datos(dato):
         except json.JSONDecodeError:
             datos = []
 
-    # Agregamos el nuevo objeto
-    datos.append(obj)
+    datos.append(dato)
 
-    # Sobrescribimos el archivo con todo el historial
     with open(ARCHIVO, "w", encoding="utf-8") as f:
         json.dump(datos, f, indent=4, ensure_ascii=False)
 
     print("✅ JSON válido guardado en datos.json")
-
+    return True, "OK"

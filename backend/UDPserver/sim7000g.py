@@ -1,10 +1,52 @@
-# receiver_udp.py (robusto: datagrama=mensaje + fallback por líneas)
+# receiver_udp.py (robusto: datagrama=mensaje + fallback por líneas + validación JSON)
 # Uso:
 #   python receiver_udp.py --port 5006 --idle 300 [--ack] [--debug]
-import argparse, socket, json, datetime, select, sys
+
+import argparse, socket, json, datetime, select
 from guardar import guardar_datos
+
 def now_ts():
     return datetime.datetime.now().isoformat(timespec="seconds")
+
+# --- Validación estricta ---
+def validar_json(obj):
+    """
+    Verifica que el JSON tenga todos los campos requeridos con valores válidos.
+    Estructura: {"disco":0-100,"ilum":0-100,"puerta":0|1,"ruido":0-140,"temp":0-100,"fuego":0|1}
+    """
+    schema = {
+        "disco": (0, 100),
+        "ilum": (0, 100),
+        "puerta": (0, 1),
+        "ruido": (0, 140),
+        "temp": (0, 100),
+        "fuego": (0, 1),
+    }
+
+    # Deben estar todas las claves
+    for k, (low, high) in schema.items():
+        if k not in obj:
+            return False, f"Falta campo requerido: {k}"
+        v = obj[k]
+        if not isinstance(v, (int, float)):
+            return False, f"Campo {k} no es numérico"
+        if not (low <= v <= high):
+            return False, f"Campo {k} fuera de rango ({v}, permitido {low}-{high})"
+
+    return True, "OK"
+
+def procesar_json(obj, addr, sock, args):
+    valido, msg = validar_json(obj)
+    if valido:
+        guardar_datos(obj)
+        print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> {obj} (guardado)")
+        if args.ack:
+            try:
+                sock.sendto(b"OK\n", addr)
+            except OSError as e:
+                print(f"[{now_ts()}] No pude enviar ACK a {addr}: {e}")
+    else:
+        print(f"[{now_ts()}] {addr[0]}:{addr[1]} JSON inválido: {msg} -> ignorado")
 
 def main():
     p = argparse.ArgumentParser()
@@ -22,20 +64,15 @@ def main():
     except OSError:
         pass
 
-    # Bind en todas las interfaces
     sock.bind(("0.0.0.0", args.port))
     print(f"[{now_ts()}] Servidor UDP escuchando en 0.0.0.0:{args.port} ...")
 
-    # Estado por emisor (address -> buffers y tiempo)
-    buffers = {}        # addr -> bytes buffer (acumula hasta '\n')
-    last_activity = {}  # addr -> datetime
+    buffers = {}
+    last_activity = {}
 
     try:
         while True:
-            # select con timeout corto para revisar expiraciones
             rlist, _, _ = select.select([sock], [], [], 1.0)
-
-            # Recepción no bloqueante (si hay datos)
             if rlist:
                 try:
                     data, addr = sock.recvfrom(args.bufsize)
@@ -43,7 +80,6 @@ def main():
                     print(f"[{now_ts()}] Error en recvfrom(): {e}")
                     continue
 
-                # Debug crudo (opcional)
                 if args.debug:
                     try:
                         ascii_preview = data.decode("utf-8", errors="replace")
@@ -52,16 +88,13 @@ def main():
                     hex_preview = " ".join(f"{b:02X}" for b in data[:128])
                     print(f"[{now_ts()}] RX {addr} bytes={len(data)} ascii='{ascii_preview[:120]}' hex={hex_preview}")
 
-                # Inicializa estructuras si es la primera vez que vemos este addr
                 if addr not in buffers:
                     buffers[addr] = b""
                     last_activity[addr] = datetime.datetime.now()
                     print(f"[{now_ts()}] Nuevo emisor: {addr}")
 
-                # Actualiza actividad
                 last_activity[addr] = datetime.datetime.now()
 
-                # --- Modo 1: intentar parsear el datagrama completo como JSON ---
                 parsed = False
                 try:
                     msg_full = data.decode("utf-8", errors="replace").strip("\r\n \t")
@@ -71,19 +104,11 @@ def main():
                 if msg_full:
                     try:
                         obj = json.loads(msg_full)
-                        guardar_datos(obj)
-                        print('SE GUARDO')
-                        print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> {obj}")
+                        procesar_json(obj, addr, sock, args)
                         parsed = True
-                        if args.ack:
-                            try:
-                                sock.sendto(b"OK\n", addr)
-                            except OSError as e:
-                                print(f"[{now_ts()}] No pude enviar ACK a {addr}: {e}")
                     except json.JSONDecodeError:
-                        parsed = False  # seguimos al fallback
+                        parsed = False
 
-                # --- Modo 2 (fallback): acumulación por líneas con '\n' ---
                 if not parsed:
                     buffers[addr] += data
                     while b"\n" in buffers[addr]:
@@ -93,18 +118,10 @@ def main():
                             continue
                         try:
                             obj = json.loads(msg)
-                            guardar_datos(obj)
-                            print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> {obj}")
-                            if args.ack:
-                                try:
-                                    sock.sendto(b"OK\n", addr)
-                                except OSError as e:
-                                    print(f"[{now_ts()}] No pude enviar ACK a {addr}: {e}")
-                        except json.JSONDecodeError:                           
-                            guardar_datos(obj)
-                            print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> (texto) {msg}")
+                            procesar_json(obj, addr, sock, args)
+                        except json.JSONDecodeError:
+                            print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> (texto no JSON) {msg}")
 
-            # Revisa emisores inactivos y limpia
             now = datetime.datetime.now()
             to_del = []
             for a, tlast in list(last_activity.items()):
@@ -125,3 +142,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
