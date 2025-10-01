@@ -1,23 +1,27 @@
 
-from pathlib import Path
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
-from PIL import Image, ImageTk
 
-def inicio(window):
+def inicio():
+    from frames.gui_login import login
+    from pathlib import Path
+    from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+
+
     OUTPUT_PATH = Path(__file__).parent
     ASSETS_PATH = OUTPUT_PATH / Path(r"assets/frame0")
+
+
     def relative_to_assets(path: str) -> Path:
         return ASSETS_PATH / Path(path)
 
 
-    #window = Tk()
+    window = Tk()
 
-    #window.geometry("1440x1024")
-    #window.configure(bg = "#153573")
+    window.geometry("1440x1024")
+    window.configure(bg = "#153573")
 
-    
+
     canvas = Canvas(
-       window,
+        window,
         bg = "#153573",
         height = 1024,
         width = 1440,
@@ -35,16 +39,16 @@ def inicio(window):
         image=image_image_1
     )
 
-    button_image_1 = PhotoImage(
+    iniciarImagen = PhotoImage(
         file=relative_to_assets("button_1.png"))
-    button_1 = Button(
-        image=button_image_1,
+    iniciar = Button(
+        image=iniciarImagen,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("aaa"),
-       relief="flat"
+        command=lambda: [window.destroy(), login()],
+        relief="flat"
     )
-    button_1.place(
+    iniciar.place(
         x=138.0,
         y=633.0,
         width=197.0,
@@ -84,5 +88,7 @@ def inicio(window):
         fill="#FFFFFF",
         font=("ArialMT", 32 * -1)
     )
-    return window
+    window.resizable(False, False)
+    window.mainloop()
 
+    
