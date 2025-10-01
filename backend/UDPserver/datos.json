@@ -78,5 +78,61 @@
         "ruido": 59,
         "temp": 48,
         "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 48,
+        "puerta": 0,
+        "ruido": 102,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 50,
+        "puerta": 0,
+        "ruido": 102,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 51,
+        "puerta": 0,
+        "ruido": 103,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 50,
+        "puerta": 0,
+        "ruido": 106,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 51,
+        "puerta": 0,
+        "ruido": 47,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 48,
+        "puerta": 0,
+        "ruido": 29,
+        "temp": 24,
+        "fuego": 0
+    },
+    {
+        "disco": 79,
+        "ilum": 47,
+        "puerta": 0,
+        "ruido": 47,
+        "temp": 24,
+        "fuego": 0
     }
 ]

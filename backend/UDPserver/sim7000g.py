@@ -4,6 +4,7 @@
 
 import argparse, socket, json, datetime, select
 from guardar import guardar_datos
+from guardar import guardar_historial
 
 def now_ts():
     return datetime.datetime.now().isoformat(timespec="seconds")
@@ -37,6 +38,7 @@ def validar_json(obj):
 
 def procesar_json(obj, addr, sock, args):
     valido, msg = validar_json(obj)
+    guardar_historial(obj)
     if valido:
         guardar_datos(obj)
         print(f"[{now_ts()}] {addr[0]}:{addr[1]} -> {obj} (guardado)")

@@ -1,0 +1,62 @@
+[
+    {
+        "disco": 79,
+        "ilum": 49,
+        "puerta": 0,
+        "ruido": 39,
+        "temp": 24,
+        "fuego": -1,
+        "hora": "2025-10-01T19:32:50",
+        "emisor": "SIM7000G"
+    },
+    {
+        "disco": 79,
+        "ilum": 49,
+        "puerta": 0,
+        "ruido": 83,
+        "temp": 24,
+        "fuego": -1,
+        "hora": "2025-10-01T19:32:55",
+        "emisor": "SIM7000G"
+    },
+    {
+        "disco": 79,
+        "ilum": 50,
+        "puerta": 0,
+        "ruido": 118,
+        "temp": 24,
+        "fuego": -1,
+        "hora": "2025-10-01T19:33:00",
+        "emisor": "SIM7000G"
+    },
+    {
+        "disco": 79,
+        "ilum": 51,
+        "puerta": 0,
+        "ruido": 104,
+        "temp": 24,
+        "fuego": -1,
+        "hora": "2025-10-01T19:33:05",
+        "emisor": "SIM7000G"
+    },
+    {
+        "disco": 79,
+        "ilum": 48,
+        "puerta": 0,
+        "ruido": 29,
+        "temp": 24,
+        "fuego": 0,
+        "hora": "2025-10-01T19:33:30",
+        "emisor": "SIM7000G"
+    },
+    {
+        "disco": 79,
+        "ilum": 47,
+        "puerta": 0,
+        "ruido": 47,
+        "temp": 24,
+        "fuego": 0,
+        "hora": "2025-10-01T19:33:35",
+        "emisor": "SIM7000G"
+    }
+]
