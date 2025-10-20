@@ -1,6 +1,9 @@
+
 {
-    "device": "TSIM7000G",
-    "counter": 4,
-    "temp": 22.0,
-    "adc0": 40
+        "disco": 85,
+        "ilum": 49,
+        "puerta": 0,
+        "ruido": 59,
+        "temp": 48,
+        "fuego": 0
 }
