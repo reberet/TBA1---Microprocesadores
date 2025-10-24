@@ -42,4 +42,11 @@ Sistema de monitoreo en tiempo real para datacenters desarrollado con Python y T
 ## 📡 Formato de Datos
 
 El sistema recibe datos en formato JSON con la siguiente estructura:
-```json
+`{
+    "disco": 85,
+    "ilum": 49,
+    "puerta": 0,
+    "ruido": 59,
+    "temp": 48,
+    "fuego": 0
+}`
