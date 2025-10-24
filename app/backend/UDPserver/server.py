@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Agregar la ruta del backend al path para poder importar guardar
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from guardar import guardar_datos
+from guardar import guardar_datos, guardar_historial
 
 UDP_IP = "0.0.0.0"
 UDP_PORT = 5005
@@ -38,6 +38,7 @@ def run_server():
             print(f"📊 Datos: {json_data}")
             
             # Guardar en archivo
+            guardar_historial(json_data)
             guardar_datos(json_data)
             
             print("-" * 50)
