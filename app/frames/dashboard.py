@@ -25,16 +25,7 @@ class DashboardFrame(BaseFrame):
         # Crear sidebar
         self.sidebar = Sidebar(self.canvas, self.image_manager, 
                               self.frame_name, username)
-        self.sidebar.create(
-            on_dashboard=self.refresh,
-            on_datos=lambda: print("Datos - TODO"),
-            on_alarmas=lambda: print("Alarmas - TODO"),
-            on_configurar=lambda: print("Configurar - TODO"),
-            on_historial=lambda: print("Historial - TODO"),
-            on_conexiones=lambda: print("Conexiones - TODO"),
-            on_logout=self.logout
-        )
-        
+        self.sidebar.create()       
         # Crear grid de widgets
         self.widget_grid = WidgetGrid(
             canvas=self.canvas,

@@ -2,7 +2,7 @@
 Sidebar Component - Barra lateral reutilizable con 6 opciones de navegación
 """
 from tkinter import Canvas, Button
-from typing import Callable, TYPE_CHECKING
+from typing import Callable, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from utils.image_manager import ImageManager
@@ -18,22 +18,35 @@ class Sidebar:
         self.username = username
         self.buttons = []
         
-    def create(self, on_dashboard: Callable, on_datos: Callable,
-               on_alarmas: Callable, on_configurar: Callable, 
-               on_historial: Callable, on_conexiones: Callable,
-               on_logout: Callable):
+    def create(self, on_dashboard: Optional[Callable] = None, 
+               on_datos: Optional[Callable] = None,
+               on_alarmas: Optional[Callable] = None, 
+               on_configurar: Optional[Callable] = None, 
+               on_historial: Optional[Callable] = None, 
+               on_conexiones: Optional[Callable] = None,
+               on_logout: Optional[Callable] = None):
         """
         Crea el sidebar completo con todos sus elementos
+        Si no se proporcionan callbacks, usa navegación automática por defecto
         
         Args:
-            on_dashboard: Callback para Dashboard
-            on_datos: Callback para Lista de Datos
-            on_alarmas: Callback para Alarmas
-            on_configurar: Callback para Configurar Datos
-            on_historial: Callback para Historial
-            on_conexiones: Callback para Conexiones
-            on_logout: Callback para cerrar sesión
+            on_dashboard: Callback para Dashboard (opcional)
+            on_datos: Callback para Lista de Datos (opcional)
+            on_alarmas: Callback para Alarmas (opcional)
+            on_configurar: Callback para Configurar Datos (opcional)
+            on_historial: Callback para Historial (opcional)
+            on_conexiones: Callback para Conexiones (opcional)
+            on_logout: Callback para cerrar sesión (opcional)
         """
+        # Usar navegación por defecto si no se proporcionan callbacks
+        on_dashboard = on_dashboard or self._go_to_dashboard
+        on_datos = on_datos or self._go_to_datos
+        on_alarmas = on_alarmas or self._go_to_alarmas
+        on_configurar = on_configurar or self._go_to_configurar
+        on_historial = on_historial or self._go_to_historial
+        on_conexiones = on_conexiones or self._go_to_conexiones
+        on_logout = on_logout or self._logout
+        
         # Rectángulo principal del sidebar
         self.canvas.create_rectangle(
             0.0, 0.0, 323.0, 1024.0,
@@ -156,6 +169,51 @@ class Sidebar:
         )
         btn.place(x=68.0, y=973.0, width=185.0, height=36.0)
         self.buttons.append(btn)
+    
+    # ============ MÉTODOS DE NAVEGACIÓN POR DEFECTO ============
+    
+    def _go_to_dashboard(self):
+        """Navegación por defecto al dashboard"""
+        from utils.navigation import nav
+        from frames.dashboard import DashboardFrame
+        nav.navigate_to(lambda: DashboardFrame().show())
+    
+    def _go_to_datos(self):
+        """Navegación por defecto a datos"""
+        from utils.navigation import nav
+        from frames.datos import DatosFrame
+        nav.navigate_to(lambda: DatosFrame().show())
+    
+    def _go_to_alarmas(self):
+        """Navegación por defecto a alarmas"""
+        from utils.navigation import nav
+        from frames.alarmas import AlarmasFrame
+        nav.navigate_to(lambda: AlarmasFrame().show())
+    
+    def _go_to_configurar(self):
+        """Navegación por defecto a configurar"""
+        from utils.navigation import nav
+        from frames.configurar_datos import ConfigurarDatosFrame
+        nav.navigate_to(lambda: ConfigurarDatosFrame().show())
+    
+    def _go_to_historial(self):
+        """Navegación por defecto a historial"""
+        from utils.navigation import nav
+        from frames.historial import HistorialFrame
+        nav.navigate_to(lambda: HistorialFrame().show())
+    
+    def _go_to_conexiones(self):
+        """Navegación por defecto a conexiones"""
+        from utils.navigation import nav
+        from frames.conexiones import ConexionesFrame
+        nav.navigate_to(lambda: ConexionesFrame().show())
+    
+    def _logout(self):
+        """Logout por defecto"""
+        from utils.navigation import nav
+        nav.clear_user_data()
+        from frames.login import LoginFrame
+        nav.navigate_to(lambda: LoginFrame().show())
     
     def destroy(self):
         """Destruye todos los botones del sidebar"""
