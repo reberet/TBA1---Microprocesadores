@@ -1,4 +1,4 @@
-# Ejercicio 04
+# TBA1 - MICROPROCESADORES
 Estudiantes: Beretta, Renzo. Chiappini, Lucas. Silva, Ignacio.  
 Universidad Católica  
 Asignatura: Microprocesadores  
